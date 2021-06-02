@@ -1,0 +1,35 @@
+<html>
+  <head>
+  <style>
+h1, a{
+    font-size:10vh;
+}
+
+h2, a{
+    font-size:5vh;
+}
+
+a:link, a:visited {
+    background-color: #f44336;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    <meta charset="utf-8">
+    <title>IoT 무드등 제어!</title>
+  </style>
+  </head>
+  <body>
+  <center>
+    <h1>IoT 무드등</h1>
+    <form method="post" enctype="application/x-www-form-urlencoded" action="/postform/">
+      <h2>Color select </h2><input type="color" name="mycolor" style="width:80px;height:40px;">
+      <input type="submit" value="Submit" style="width:100px;height:50px;font-size:20px;"></br>
+      <a href="/on">ON</a>   <a href="/off">OFF</a>
+    </form>
+  </center>
+  </body>
+</html>
