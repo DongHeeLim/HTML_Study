@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <input type="button" value="night" style="WIDTH:50pt;HEIGHT:30pt;margin:10px;" onclick="
+      document.querySelector('body').style.backgroundColor='black';
+      document.querySelector('body').style.color='white';
+    ">
+    <input type="button" value="day" style="WIDTH:50pt;HEIGHT:30pt; margin-left:20px;" onclick="
+      document.querySelector('body').style.backgroundColor='white';
+      document.querySelector('body').style.color='black';
+    ">
+    <input id="night_day" type="button" value="night" onclick="
+    if (document.querySelector('#night_day').value==='night'){
+      document.querySelector('body').style.backgroundColor='black';
+      document.querySelector('body').style.color='white';
+      this.value='day'
+    }else{
+      document.querySelector('body').style.backgroundColor='white';
+      document.querySelector('body').style.color='black';
+      this.value='night'
+    }
+    ">
+    <h1>Introduce</h1>
+  </body>
+</html>
