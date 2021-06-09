@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <h1>TEXT</h1>
+    <title>syncButtonText</title>
+    <style>
+      #button1{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius:5px;
+      }
+      #button2{
+        border-top-right-radius: 5px;
+        border-bottom-left-radius:5px;
+      }
+      #button3{
+        border-radius:10px;
+      }
+      #button4{
+        color:red;
+      }
+      #bt_group1{
+
+      }
+      #bt_group2 button{
+        border:2px solid powderblue;
+        background-color:rgba(0,0,0,0);
+        color:skyblue;
+        padding:15px;
+      }
+      #bt_group2 button:hover{
+        color:white;
+        background:skyblue;
+      }
+    </style>
+    <script>
+      function nightDayHandler2(self){
+        var target = document.querySelector('body');
+        if (self.value==='night'){
+          target.style.backgroundColor='black';
+          target.style.color='white';
+          self.value='day';
+          button1.style.backgroundColor='purple';
+          button1.style.color='red';
+          button2.style.backgroundColor='purple';
+          button2.style.color='red';
+          button1.value="day"
+          button2.value="day"
+          }
+
+        else{
+          target.style.backgroundColor='white';
+          target.style.color='black';
+          self.value='night';
+          button1.style.backgroundColor='green';
+          button1.style.color='powderblue';
+          button2.style.backgroundColor='green';
+          button2.style.color='powderblue';
+          button1.value="night"
+          button2.value="night"
+          }
+      }
+      function nightDayHandler3(self){
+        var target = document.querySelector('body');
+        if (button1.value==='night'){
+          target.style.backgroundColor='black';
+          target.style.color='white';
+          button1.value='day';
+          button2.value='day';
+
+        }
+        else{
+          target.style.backgroundColor='white';
+          target.style.color='black';
+          button1.value='night';
+          button2.value='night';
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="bt_group1">
+      <input id="button1" type="button" value="night" onclick="nightDayHandler2(this)">
+      <input id="button2" type="button" value="night" onclick="nightDayHandler2(this)">
+    </div>
+    <div id="bt_group2">
+      <button id="button3" type="button" name="button3">버튼 태그</button>
+      <button id="button4" type="button" name="button4" onclick="nightDayHandler3(this)">handler1</button>
+      <button type="button" name="button5" onclick="nightDayHandler3(this)">handler2</button>
+    </div>
+  </body>
+</html>
