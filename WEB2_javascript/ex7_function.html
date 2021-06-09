@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <script>
+      function sum(num1, num2){
+        document.write(num1+num2+'<br>');
+      }
+      function sum2(num1, num2){
+        return num1+num2;
+      }
+      function sumColorRed(num1, num2){
+        return document.write('<div style="color:red">'+(num1+num2)+'</div>')
+      }
+
+      sum(2,3);
+      sumColorRed(2,3);
+      document.write(sum2(2,3)+'<br>');
+      document.write('<div style="color:blue">'+sum2(2,3)+'</div>')
+      document.write('<div style="font-size:3rem;">'+sum2(2,3)+'</div>')
+    </script>
+  </body>
+</html>
