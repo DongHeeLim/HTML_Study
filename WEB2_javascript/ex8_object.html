@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Object</h1>
+    <h2>Create</h2>
+    <script>
+      var students = {
+        "worrior":"k1",
+        "magician":"K2",
+        "archer":"Lim",
+        "healer":"Seo"
+      };
+      document.write("worrior : " + students.worrior+"<br>");
+      document.write("desiner : " + students.magician+"<br>");
+      students.tanker = "K3";
+      document.write("tanker : " + students.tanker+"<br>");
+      students["dark magician"] = "Lee";
+      document.write("dark magician : " + students["dark magician"]+"<br>");
+    </script>
+    <h2>interate</h2>
+    <script>
+    for(var key in students){
+      document.write(key+" : "+students[key]+"<br>");
+    }
+    </script>
+    <h2>Property & Method</h2>
+    <script>
+      students.showAll = function(){
+        for(var key in this){
+          if(key !=="showAll"){
+              document.write(key+" : "+this[key]+"<br>");
+          }
+        }
+      }
+      // var showAll = function(){}
+      students.showAll();
+    </script>
+  </body>
+</html>
