@@ -7,10 +7,9 @@ var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
     var pathname = url.parse(_url, true).pathname;
-    var index = queryData.id === undefined ? true : false;  // id값이 undefiend 면 true, 특정값이 있으면 false 를 index에 넣기
     if(pathname ==='/'){
-      ${index ?
-        var title = "About";
+      if(queryData.id === undefined){
+        var title = "About"
         var description = fs.readFileSync('data/About', 'utf-8');
         var template =`
         <!DOCTYPE html>
@@ -71,7 +70,7 @@ var app = http.createServer(function(request,response){
         `;
         response.writeHead(200);
         response.end(template); // response.end 출력 완료
-        :
+      }else{
         fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
           var title = queryData.id;
           var template =`
@@ -134,7 +133,7 @@ var app = http.createServer(function(request,response){
           response.writeHead(200);
           response.end(template); // response.end 출력 완료
         });
-      };
+      }
     }else{
       response.writeHead(404);
       response.end('Not found');
