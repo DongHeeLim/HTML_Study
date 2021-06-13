@@ -9,7 +9,7 @@ console.log('C');
 */
 
 
-// 비동기
+// 비동기  "끝나면 연락해~ CAllBACK"
 console.log('A');
 fs.readFile('syntax/sample.txt', 'utf8', function(err, result){
   console.log(result);
