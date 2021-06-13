@@ -1,8 +1,8 @@
-const testFolder = './tests/';
+// 파일 리스트 배열로 전달
+
+const testFolder = './data';
 const fs = require('fs');
 
-fs.readdir(testFolder, (err, files) => {
-  files.forEach(file => {
-    console.log(file);
-  });
+fs.readdir(testFolder, function(err, filelist){
+  console.log(filelist);
 });
