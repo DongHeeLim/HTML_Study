@@ -4,7 +4,7 @@ var url = require('url');
 var qs = require('querystring');
 
 function templateHTML(title, list, body, control){
-  return`
+  return `
   <!DOCTYPE html>
   <html>
   <head>
@@ -88,7 +88,12 @@ var app = http.createServer(function(request,response){
             var list = templateList(filelist);
             var template = templateHTML(title, list,
               `<h1>${title}</h1>${description}`,
-              `<a href="/create">create</a> <a href="/update?id=${title}">update</a>`
+              `<a href="/create">create</a>
+               <a href="/update?id=${title}">update</a>
+               <form action="/delete_process" method="post" onsubmit="return check()">
+                <input type="hidden" name="id" value=${title}>
+                <input type="submit" value="delete">
+               </form>`
             );
             response.writeHead(200);
             response.end(template); // response.end 출력 완료
@@ -96,6 +101,7 @@ var app = http.createServer(function(request,response){
         });
       }
     }else if (pathname ==='/create'){
+      //데이터 전송 post 방식
       fs.readdir('./data', function(err, filelist){
         var title = "Idea-create"
         var list = templateList(filelist);
@@ -114,6 +120,7 @@ var app = http.createServer(function(request,response){
         response.end(template);
       });
     }else if (pathname==="/create_process"){
+      //데이터 전송은 post 방식 (get방식은 querystring 이 보임)
       var body = '';
       request.on('data', function(data){  //데이터 조금씩 받을 때마다 합치기
         body = body + data;
@@ -125,7 +132,7 @@ var app = http.createServer(function(request,response){
         fs.writeFile(`data/${title}`, description, 'utf8', function(err){
           response.writeHead(302, {Location:`/?id=${qs.escape(title)}`});  // redirection, escape-> 인코딩함수
           response.end();
-        })
+        });
       });
     } else if(pathname === '/update'){
       fs.readdir('./data', function(err, filelist){
@@ -150,7 +157,39 @@ var app = http.createServer(function(request,response){
         });
       });
     }else if(pathname === '/update_process'){
-      
+      //데이터 가져오기
+      var body = '';
+      request.on('data', function(data){  //데이터 조금씩 받을 때마다 합치기
+        body = body + data;
+      });
+      request.on('end', function(){ // 더이상 들어올 데이터 없으면
+        var post = qs.parse(body);  // 데이터를 객체화
+        var id = post.id;
+        var title = post.title;
+        var description = post.description;
+        fs.rename(`data/${id}`, `data/${title}`, function(error){
+          fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+            response.writeHead(302, {Location:`/?id=${qs.escape(title)}`});  // redirection, escape-> 인코딩함수
+            response.end();
+          });
+        });
+        // console.log(post);
+      });
+    }else if(pathname === '/delete_process'){
+      //데이터 가져오기
+      var body = '';
+      request.on('data', function(data){  //데이터 조금씩 받을 때마다 합치기
+        body = body + data;
+      });
+      request.on('end', function(){ // 더이상 들어올 데이터 없으면
+        var post = qs.parse(body);  // 데이터를 객체화
+        var id = post.id;
+        fs.unlink(`data/${id}`, function(error){
+          response.writeHead(302, {Location:`/`});
+          response.end();
+        });
+        // console.log(post);
+      });
     }else{
       response.writeHead(404);
       response.end('Not found');
