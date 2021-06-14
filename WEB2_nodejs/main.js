@@ -3,66 +3,68 @@ var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 
-function templateHTML(title, list, body, control){
-  return `
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <title>CoolDong's Life-${title}</title>
-    <meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NW8YK33GNJ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+var template = {
+  html:function(title, list, body, control){
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>CoolDong's Life-${title}</title>
+      <meta charset="utf-8">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-NW8YK33GNJ"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-      gtag('config', 'G-NW8YK33GNJ');
-    </script>
-    <link rel="stylesheet" type="text/css" href="padding.css"/>
-    <style>
-      .js{
-        font-weight:bold;
-        color:red;
-      }
-      #setRed{
-        color:red;
-      }
-      #setBlue{
-        color:blue;
-      }
-      span{
-        color:green;
-      }
-    </style>
-    <script src="color.js"></script>
-  </head>
-  <body>
-  <div id="_padding">
-    <h1><a href="/?id=About">CoolDong's Life</a></h1>
-      <input type="button" value="night" style="width:50pt;height:25pt;" onclick="
-        nightDayHandler(this);
-      ">
-      ${list}
-      ${control}
-      ${body}
-  </div>
-  </body>
-  </html>
-  `;
-}
-
-function templateList(filelist){
-  var list = '<ol>';
-  var i = 1;
-  while(i< filelist.length){
-    list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`;
-    i++;
+        gtag('config', 'G-NW8YK33GNJ');
+      </script>
+      <link rel="stylesheet" type="text/css" href="padding.css"/>
+      <style>
+        .js{
+          font-weight:bold;
+          color:red;
+        }
+        #setRed{
+          color:red;
+        }
+        #setBlue{
+          color:blue;
+        }
+        span{
+          color:green;
+        }
+      </style>
+      <script src="color.js"></script>
+    </head>
+    <body>
+    <div id="_padding">
+      <h1><a href="/?id=About">CoolDong's Life</a></h1>
+        <input type="button" value="night" style="width:50pt;height:25pt;" onclick="
+          nightDayHandler(this);
+        ">
+        ${list}
+        ${control}
+        ${body}
+    </div>
+    </body>
+    </html>
+    `;
+  },
+  list:function(filelist){
+    var list = '<ol>';
+    var i = 1;
+    while(i< filelist.length){
+      list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`;
+      i++;
+    }
+    list = list+'</ol>';
+    return list;
   }
-  list = list+'</ol>';
-  return list;
 }
+
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -73,20 +75,20 @@ var app = http.createServer(function(request,response){
         fs.readdir('./data', function(err, filelist){
           var title = "About"
           var description = fs.readFileSync('data/About', 'utf-8');
-          var list = templateList(filelist);
-          var template = templateHTML(title, list,
+          var list = template.list(filelist);
+          var html = template.html(title, list,
             `<h1>${title}</h1>${description}`,
             `<a href="/create">create</a>`
           );
           response.writeHead(200);
-          response.end(template);
+          response.end(html);
         });
       }else{    //id 값 있을 떄
         fs.readdir('./data', function(err, filelist){
           fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
             var title = queryData.id;
-            var list = templateList(filelist);
-            var template = templateHTML(title, list,
+            var list = template.list(filelist);
+            var html = template.html(title, list,
               `<h1>${title}</h1>${description}`,
               `<a href="/create">create</a>
                <a href="/update?id=${title}">update</a>
@@ -96,7 +98,7 @@ var app = http.createServer(function(request,response){
                </form>`
             );
             response.writeHead(200);
-            response.end(template); // response.end 출력 완료
+            response.end(html); // response.end 출력 완료
           });
         });
       }
@@ -104,8 +106,8 @@ var app = http.createServer(function(request,response){
       //데이터 전송 post 방식
       fs.readdir('./data', function(err, filelist){
         var title = "Idea-create"
-        var list = templateList(filelist);
-        var template = templateHTML(title, list, `
+        var list = template.list(filelist);
+        var html = template.html(title, list, `
           <form action="/create_process" method="post">
           <p><input type="text" name="title" placeholder="title"></p>
           <p>
@@ -117,7 +119,7 @@ var app = http.createServer(function(request,response){
           </form>
         `, '');
         response.writeHead(200);
-        response.end(template);
+        response.end(html);
       });
     }else if (pathname==="/create_process"){
       //데이터 전송은 post 방식 (get방식은 querystring 이 보임)
@@ -138,9 +140,9 @@ var app = http.createServer(function(request,response){
       fs.readdir('./data', function(err, filelist){
         fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
           var title = queryData.id;
-          var list = templateList(filelist);
+          var list = template.list(filelist);
           // 어떤 파일을 수정할 것인지 알아야해서 대상을 title(수정해야할 것)이 아닌 id로
-          var template = templateHTML(title, list,
+          var html = template.html(title, list,
             `<form action="/update_process" method="post">
             <input type="hidden" name="id" value="${title}">
             <p><input type="text" name="title" placeholder="title" value=${title}></p>
@@ -153,7 +155,7 @@ var app = http.createServer(function(request,response){
             </form>
           `, '');
           response.writeHead(200);  //readFile은 비동기라서 처리하려면 내부에 있어야함
-          response.end(template);
+          response.end(html);
         });
       });
     }else if(pathname === '/update_process'){
