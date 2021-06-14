@@ -1,9 +1,9 @@
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
-// var querystring = require('querystring');
+var qs = require('querystring');
 
-function templateHTML(title, list, body){
+function templateHTML(title, list, body, control){
   return`
   <!DOCTYPE html>
   <html>
@@ -45,6 +45,7 @@ function templateHTML(title, list, body){
         nightDayHandler(this);
       ">
       ${list}
+      ${control}
       ${body}
   </div>
   </body>
@@ -68,27 +69,65 @@ var app = http.createServer(function(request,response){
     var queryData = url.parse(_url, true).query;
     var pathname = url.parse(_url, true).pathname;
     if(pathname ==='/'){
-      if(queryData.id === undefined){
+      if(queryData.id === undefined){   //초기창
         fs.readdir('./data', function(err, filelist){
           var title = "About"
           var description = fs.readFileSync('data/About', 'utf-8');
           var list = templateList(filelist);
-          var template = templateHTML(title, list, `<h1>${title}</h1>${description}`);
+          var template = templateHTML(title, list,
+            `<h1>${title}</h1>${description}`,
+            `<a href="/create">create</a>`
+          );
           response.writeHead(200);
           response.end(template);
         });
-      }else{
+      }else{    //id 값 있을 떄
         fs.readdir('./data', function(err, filelist){
           fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
             var title = queryData.id;
             var list = templateList(filelist);
-            var template = templateHTML(title, list, `<h1>${title}</h1>${description}`);
+            var template = templateHTML(title, list,
+              `<h1>${title}</h1>${description}`,
+              `<a href="/create">create</a> <a href="/update">update</a>`
+            );
             response.writeHead(200);
             response.end(template); // response.end 출력 완료
           });
         });
       }
-    }else{
+    }else if (pathname ==='/create'){
+      fs.readdir('./data', function(err, filelist){
+        var title = "Idea-create"
+        var list = templateList(filelist);
+        var template = templateHTML(title, list, `
+          <form action="http://localhost:3000/create_process" method="post">
+          <p><input type="text" name="title" placeholder="title"></p>
+          <p>
+            <textarea name="description" placeholder="description"></textarea>
+          </p>
+          <p>
+            <input type="submit">
+          </p>
+          </form>
+        `, '');
+        response.writeHead(200);
+        response.end(template);
+      });
+    }else if (pathname==="/create_process"){
+      var body = '';
+      request.on('data', function(data){  //데이터 조금씩 받을 때마다 합치기
+        body = body + data;
+      });
+      request.on('end', function(){ // 더이상 들어올 데이터 없으면
+        var post = qs.parse(body);  // 데이터를 객체화
+        var title = post.title;
+        var description = post.description;
+        fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+          response.writeHead(302, {Location:`/?id=${qs.escape(title)}`});  // redirection, escape-> 인코딩함수
+          response.end();
+        })
+      });
+    } else {
       response.writeHead(404);
       response.end('Not found');
     }
