@@ -59,5 +59,40 @@ module.exports = {
     }
     list = list+'</ol>';
     return list;
+  },
+  crud:function(title){
+    return `
+     <a href="/create">create</a>
+     <a href="/update?id=${title}">update</a>
+     <form action="/delete_process" method="post" onsubmit="return check()">
+      <input type="hidden" name="id" value=${title}>
+      <input type="submit" value="delete">
+     </form>`
+  },
+  create_html:function(){
+      return `
+        <form action="/create_process" method="post">
+        <p><input type="text" name="title" placeholder="title"></p>
+        <p>
+          <textarea name="description" placeholder="description"></textarea>
+        </p>
+        <p>
+          <input type="submit">
+        </p>
+        </form>`
+  },
+  update_html:function(title, description){
+    return `
+      <form action="/update_process" method="post">
+      <input type="hidden" name="id" value="${title}">
+      <p><input type="text" name="title" placeholder="title" value=${title}></p>
+      <p>
+        <textarea name="description" placeholder="description">${description}</textarea>
+      </p>
+      <p>
+        <input type="submit">
+      </p>
+      </form>
+    `
   }
 }
