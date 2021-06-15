@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Serial Communication</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>
+    <style>
+      #sample{
+        width: 30px;
+        height: 20px;
+        background-color: #00ffab;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Serial Communication</h1>
+    <div id="sample"></div>
+  <script>
+    var socket = io();
+    socket.on('data', function(data){
+      // console.log(data);
+      document.getElementById('sample').innerHTML = data; //출력부분
+      // document.getElementById('sample').style.opacity = data/100;  //가변저항 색채용
+
+    });
+  </script>
+  </body>
+</html>

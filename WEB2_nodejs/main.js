@@ -4,6 +4,7 @@ var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/template.js');
 var path = require('path');
+var sanitizeHtml = require('sanitize-html');
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -27,13 +28,19 @@ var app = http.createServer(function(request,response){
           var filteredId = path.parse(queryData.id).base;   //dir 차단 파일명만 나옴
           fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
             var title = queryData.id;
+            var sanitizedTitle = sanitizeHtml(title);
+            var sanitizedDescription = sanitizeHtml(description,{
+              allowedTag:['a', 'h1'],
+              allowedAttributes:{'a':['href']},
+              allowedIframeHostnames:['www.youtube.com']
+            });
             var list = template.list(filelist);
-            var html = template.html(title, list,
-              `<h1>${title}</h1>${description}`,
+            var html = template.html(sanitizedTitle, list,
+              `<h1>${sanitizedTitle}</h1>${sanitizedDescription}`,
               `<a href="/create">create</a>
-               <a href="/update?id=${title}">update</a>
+               <a href="/update?id=${sanitizedTitle}">update</a>
                <form action="/delete_process" method="post" onsubmit="return check()">
-                <input type="hidden" name="id" value=${title}>
+                <input type="hidden" name="id" value=${sanitizedTitle}>
                 <input type="submit" value="delete">
                </form>`
             );
@@ -127,7 +134,7 @@ var app = http.createServer(function(request,response){
       request.on('end', function(){ // 더이상 들어올 데이터 없으면
         var post = qs.parse(body);  // 데이터를 객체화
         var id = post.id;
-        var filteredId = path.parse(id).base;   //파일 삭제할 때 파일명만 
+        var filteredId = path.parse(id).base;   //파일 삭제할 때 파일명만
         fs.unlink(`data/${filteredId}`, function(error){
           response.writeHead(302, {Location:`/`});
           response.end();
