@@ -3,6 +3,7 @@ var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/template.js');
+var path = require('path');
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -23,7 +24,8 @@ var app = http.createServer(function(request,response){
         });
       }else{    //id 값 있을 떄
         fs.readdir('./data', function(err, filelist){
-          fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+          var filteredId = path.parse(queryData.id).base;   //dir 차단 파일명만 나옴
+          fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
             var title = queryData.id;
             var list = template.list(filelist);
             var html = template.html(title, list,
@@ -76,7 +78,8 @@ var app = http.createServer(function(request,response){
       });
     } else if(pathname === '/update'){
       fs.readdir('./data', function(err, filelist){
-        fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description){
+        var filteredId = path.parse(queryData.id).base;
+        fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
           var title = queryData.id;
           var list = template.list(filelist);
           // 어떤 파일을 수정할 것인지 알아야해서 대상을 title(수정해야할 것)이 아닌 id로
@@ -124,7 +127,8 @@ var app = http.createServer(function(request,response){
       request.on('end', function(){ // 더이상 들어올 데이터 없으면
         var post = qs.parse(body);  // 데이터를 객체화
         var id = post.id;
-        fs.unlink(`data/${id}`, function(error){
+        var filteredId = path.parse(id).base;   //파일 삭제할 때 파일명만 
+        fs.unlink(`data/${filteredId}`, function(error){
           response.writeHead(302, {Location:`/`});
           response.end();
         });

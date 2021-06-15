@@ -1,6 +1,24 @@
-var clr = require('./colors.js');
+// var clr = require('./colors.js');
 
 module.exports = {
+//     state : 'night',
+//     control2:function(self){
+//       if (self.value==='night'){
+//         Body.setBackgroundColor('black');
+//         Body.setColor('white');
+//         Links.setColor('powderblue');
+//         self.value='day';
+//       }else{
+//         Body.setBackgroundColor('white');
+//         Body.setColor('black');
+//         Links.setColor('blue');
+//         self.value='night';
+//       }
+//
+//       return `
+//       <input type="button" value="night" style="width:50pt;height:25pt;"
+//       onclick="${nightDayHandler(this)};">`
+//     },
   html:function(title, list, body, control){
     return `
     <!DOCTYPE html>
@@ -39,9 +57,6 @@ module.exports = {
     <body>
     <div id="_padding">
       <h1><a href="/?id=About">CoolDong's Life</a></h1>
-        <input type="button" value="night" style="width:50pt;height:25pt;" onclick="
-          nightDayHandler(this);
-        ">
         ${list}
         ${control}
         ${body}
@@ -96,3 +111,4 @@ module.exports = {
     `
   }
 }
+//nightDayHandler(this)
