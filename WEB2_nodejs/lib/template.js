@@ -19,6 +19,7 @@ module.exports = {
 //       <input type="button" value="night" style="width:50pt;height:25pt;"
 //       onclick="${nightDayHandler(this)};">`
 //     },
+
   html:function(title, list, body, control){
     return `
     <!DOCTYPE html>
@@ -57,6 +58,7 @@ module.exports = {
     <body>
     <div id="_padding">
       <h1><a href="/?id=About">CoolDong's Life</a></h1>
+      <input type="button" value="night" style="width:50pt;height:25pt;" onclick="alert("test")">
         ${list}
         ${control}
         ${body}

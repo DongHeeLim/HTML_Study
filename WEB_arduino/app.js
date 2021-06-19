@@ -1,3 +1,4 @@
+// Arduino Serial Communication
 var http = require('http');
 var fs = require('fs');
 var SerialPort = require("serialport");
