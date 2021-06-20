@@ -2,6 +2,9 @@
 var http = require('http');
 var fs = require('fs');
 var SerialPort = require("serialport");
+var BTSP = require('bluetooth-serial-port');
+var serial = new BTSP.BluetoothSerialPort();
+
 
 var index = fs.readFileSync('index.html');
 
